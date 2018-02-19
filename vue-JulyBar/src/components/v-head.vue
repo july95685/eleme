@@ -21,27 +21,42 @@
 		<div class="background">
 			<img width="100%" height="100%" :src="seller.avator"></img>
 		</div>
-		<div v-show="detailShow" class="detail">
-			<div class="detail-wrapper">
-				<div class="detail-main">
-					<div class="detail-head">
-						<span>粥品香坊（大运村）</span>
-					</div>
-					<div class="star-wrapper">		
-						<star :size="48" :score="3.8"></star>
-					</div>
-					<div style="padding:0 30px;height:30px;display:flex;justify-content:space-between;flex-direction:row;">
-						<div style="height:50%;flex:1;border-bottom:1px solid #FFF;"></div>
-						<div style="padding:0 20px;line-height:30px;font-size:16px;">优惠信息</div>
-						<div style="height:50%;flex:1;border-bottom:1px solid #FFF;"></div>
+		<transition name="fade">
+			<div v-show="detailShow" class="detail" >
+				<div class="detail-wrapper">
+					<div class="detail-main">
+						<div class="detail-head">
+							<span>粥品香坊（大运村）</span>
+						</div>
+						<div class="star-wrapper">		
+							<star :size="48" :score="3.8"></star>
+						</div>
+						<div class="title" style="">
+							<div style="height:50%;flex:1;border-bottom:1px solid #FFF;"></div>
+							<div style="padding:0 20px;line-height:30px;font-size:16px;font-weight:700;s">优惠信息</div>
+							<div style="height:50%;flex:1;border-bottom:1px solid #FFF;"></div>
+						</div>
+						<ul v-if="supports" class="supports">
+							<li class="support-item" v-for="item in supports" >
+								<span class="icon" :class="item.type">{{item.iconText}}</span>
+								<span class="text">{{item.description}}</span>
+							</li>
+						</ul>
+						<div class="title" style="">
+							<div style="height:50%;flex:1;border-bottom:1px solid #FFF;"></div>
+							<div style="padding:0 20px;line-height:30px;font-size:16px;font-weight:700;s">优惠信息</div>
+							<div style="height:50%;flex:1;border-bottom:1px solid #FFF;"></div>
+						</div>
+						<div class="bulletin">
+							李锦老师警下发言首先认为8是狼，并且并没有可说服人的逻辑。然后他认为5，6，12是狼不会错。理论上当我们认为12是狼，基本会认为警上帮他号票的1是狼，PK警长投票的6是狼，第一轮警长投票的5是狼。但是李锦老师怀疑8是倒勾狼，并且打死5，6，12；那么
+						</div>
 					</div>
 				</div>
+				<div class="detail-close" @click="hideDetail()">
+					X
+				</div>
 			</div>
-			<div class="detail-close" @click="hideDetail()">
-				X
-			</div>
-
-		</div>
+		</transition>
 	</div>
 	
 </template>
@@ -51,7 +66,16 @@
   	data() {
     	return {
 	      test:"123-1",
-	      detailShow: false
+	      detailShow: false,
+	      supports:[{
+	      	description:'在线支付满30减5',
+	      	type:'decrease',
+	      	iconText:'减'
+	      },{
+	      	description:'VC无限火球法全场5折',
+	      	type:'discount',
+	      	iconText:'折'
+	      }]
 	    }
 	},
 	components:{
@@ -63,6 +87,7 @@
 		console.log(this.test);
 		this.aaabbb = ['decrease','discount'];
 		this.test = 'decrease'
+		this.classMap = ['decrease','discount','special','invoice','guarantee']
 	},
 	methods:{
 		showDetail(){
@@ -74,7 +99,7 @@
 	}
   }
 </script>
-<style>
+<style >
 	body{
 		margin:0;
 
@@ -151,13 +176,23 @@
 		z-index:100;
 		width:100%;
 		height:100%;
-		background-color:rgba(7,17,27,0.8);
 		top:0;
 		left:0;
 		overflow:auto;
+		background-color:rgba(7,17,27,0.8);
 	}
+
+	.fade-leave-active{
+	  transition: opacity 0.5s;
+	}
+	.fade-enter-active {
+	  transition: opacity 0.5s;
+	}
+	.fade-enter, .fade-leave-to{
+ 	  opacity: 0;
+	}
+
 	.detail-wrapper{
-		min-height:100%;
 	}
 	.detail-main{
 		margin-top:64px;
@@ -172,6 +207,7 @@
   		margin:-64px auto 0 auto;
   		clear:both;
   		font-size:24px;
+  		bottom:32px;
 	}
 	.clearfix{
 		display:inline-block;
@@ -190,5 +226,30 @@
 	.detail-head{
 		color:#FFF;
 		font-size:20px;
+	}
+	.title{
+		spadding:0 10%;height:30px;display:flex;justify-content:space-between;flex-direction:row;
+	}
+	.supports{
+		list-style: none;
+	    width: 80%;
+	    margin: 0 auto;
+	    font-size: 20px;
+	    padding-top: 20px;
+	    text-align: left;
+	}
+	.support-item{
+		padding:0 12px;
+		margin-bottom:12px;
+	}
+	.supports .icon{
+		padding:0 3px;
+		margin-right:15px;
+	}
+	.bulletin{
+		line-height:28px;
+		font-size:20px;
+		text-align:left;
+		padding:0 24px;
 	}
 </style>
