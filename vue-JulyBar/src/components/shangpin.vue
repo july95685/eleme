@@ -1,15 +1,16 @@
 <template>
 	<div class="goods">
-		<div class="menus-wrapper">
+		<div class="menus-wrapper" ref="menusWrapper">
 			<ul>
-				<li v-for="item in goods" class="menu-item">
+				<li v-for="(item,index) in goods" @click="selectMenu(index)"
+				 class="menu-item" :class="{'current':currentIndex == index}">
 					<span class="icon">{{item.name}}</span>
 				</li>
 			</ul>
 		</div>
-		<div class="goods-wrapper">
+		<div class="goods-wrapper" ref="goodsWrapper">
 			<ul>
-				<li v-for="item in goods" class="goods-list">
+				<li v-for="item in goods" class="goods-list food-list-hook" >
 					<h1 class="goods-title">{{item.name}}</h1>
 					<ul>
 						<li v-for="food in item.foods" class="food-item">
@@ -21,29 +22,46 @@
 								<p class="desc">{{food.description}}</p>
 								<div class="extra">
 									<span>月售{{food.sellCount}}</span>
-									<span>好评率{{food.rating}}</span>
+									<span>好评率{{food.rating}}%</span>
 								</div>
 								<div>
-									<span class="price">价格{{food.price}}</span>
-									<span v-show="food.oldPrice" class="price-old">原价{{food.oldPrice}}</span>
+									<span class="price">¥{{food.price}}</span>
+									<span v-show="food.oldPrice" class="price-old">原价:¥{{food.oldPrice}}</span>
+									<div class="wrapperCart">
+										<cartControl v-on:cartaddevent="testcartAdd" :food = "food"></cartControl>
+									</div>
+
 								</div>
+								
 							</div>
 						</li>
 					</ul>
 				</li>
 			</ul>
 		</div>
+		<div class="shop-wrapper">
+			<shopCart ref="sc" :delivery-price="6" :min-price="inprice" :select-food = "selectFood"></shopCart>
+		</div>
 	</div>
 </template>
 <script>
+	import BScroll from 'better-scroll'
+	import shopCart from '../components/shop-cart.vue'
+	import cartControl from '../components/cart-control.vue'
 	export default{
 		props:{
 			size:{
 				type:Number
 			},
 		},
+		components:{
+			shopCart,cartControl
+		},
 		data(){
 			return {
+				 "listHeight":[],
+				 "scrollY":0,
+				 "inprice":20,
 				 "goods": [
 					    {
 					      "name": "热销榜",
@@ -738,9 +756,76 @@
 					  ]
 			};
 		},
+		computed:{
+			currentIndex(){
+				for(let i = 0;i < this.listHeight.length;i++){
+					let height1 = this.listHeight[i];
+					let height2 = this.listHeight[i + 1];
+					if(!height2 ||  (this.scrollY >= height1 && this.scrollY < height2)){
+					
+						return i;
+					}
+				}
+				return 0;
+			},
+			selectFood(){
+				let foods = [];
+				this.goods.forEach((good) => {
+					good.foods.forEach((food) => {
+						if(food.count){
+							foods.push(food);
+						}
+					})
+				})
+				return foods;
+			}
+		},
 		created(){
 			console.log('12345');
-		}
+		},
+		mounted(){
+			this.$nextTick(() => {
+				this._initScroll();
+				this._calculcate();
+				this.checkDivScroolTop();
+			})
+		
+		},
+		methods:{
+			_initScroll(){
+				console.log(this.goods);
+			},
+			computedTest(){
+           		console.log(this.$el);
+           		console.log(this.$refs.menusWrapper);
+            },
+            _calculcate(){
+            	let foodlist = this.$refs.goodsWrapper.getElementsByClassName("food-list-hook");
+            	console.log(foodlist);
+            	let height = 0;
+            	for(let i = 0;i < foodlist.length;i++){
+            		let item = foodlist[i];
+            		this.listHeight.push(height);
+            		height = height + item.clientHeight;
+            	}
+            },
+            checkDivScroolTop(){
+			      var scrollDiv =this.$refs.goodsWrapper;
+			      var self = this;
+			      scrollDiv.addEventListener('scroll', function() {
+			        self.scrollY = scrollDiv.scrollTop;
+			      });
+			},
+			selectMenu(index){
+				var scrollDiv = this.$refs.goodsWrapper;
+				scrollDiv.scrollTop = this.listHeight[index];
+				this.scrollY = this.listHeight[index];
+			},
+			testcartAdd(target){
+				this.$refs.sc.drop(target); 
+			}
+		},
+			
 	}
 </script>
 <style >
@@ -755,7 +840,7 @@
 	.menus-wrapper{
 	    position: absolute;
 	    width: 100px;
-	    bottom: 0;
+	    bottom: 50px;
 	    overflow: scroll;
 	    top: 182px;
 	    background-color: #f5f5f5;
@@ -768,7 +853,7 @@
 		display:table;
 		width:70px;
 		height:60px;
-		line-height:14px;
+		line-height:20px;
 		
 	}
 	.menu-item span{
@@ -776,13 +861,26 @@
 		vertical-align: middle;
 		border-bottom:1px solid #999;
 	}
+	.menu-item:last-child span{
+		display:table-cell;
+		vertical-align: middle;
+		border-bottom:none;
+	}
 	.goods-wrapper{
 		position: absolute;
 	    left: 100px;
 	    right: 0;
-	    bottom: 0;
+	    bottom: 50px;
 	    overflow: scroll;
 	    top: 182px;
+	}
+	.shop-wrapper{
+		position: fixed;
+		width:100%;
+		bottom:0;
+		z-index:99;
+		background-color:#000;
+		height:50px;
 	}
 	.goods-title{
 		padding-left:14px;
@@ -813,7 +911,6 @@
 	}
 	.content .name{
 		margin: 2px 0 8px 0;
-	    height: 18px;
 	    line-height: 18px;
 	    font-size: 18px;
 	    color: rgb(7,17,27);
@@ -829,7 +926,22 @@
 	.price-old{
 		font-weight:700;
 		color:rgb(147,153,159);
-		font-size:16px;
+		font-size:13px;
 		text-decoration: line-through;
+	}
+	.current{
+		background-color:#FFF;
+		font-weight:700;
+
+	}
+	.current span{
+		border-bottom:none;
+	}
+	.wrapperCart{
+		display:inline-block;
+		vertical-align: top;
+		text-align:right;
+		position:absolute;
+		right:18px;
 	}
 </style>
