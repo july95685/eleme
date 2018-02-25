@@ -3,7 +3,7 @@
 		<div class="shop-content">
 			<div class="shop-left">
 				<div class="logo-wrapper">
-					<div class="logo" :class="{'highLight':totleCount != 0}"> 
+					<div class="logo" :class="{'highLight':totleCount != 0}" @click="toggleList"> 
 						<span>车</span>
 					</div>
 					<div class="num" v-show="totleCount > 0">{{totleCount}}</div>
@@ -30,9 +30,29 @@
 				</transition>
 			</div>
 		</div>
+		<div class="shopcart-list" v-show="listShow">
+			<div class="list-header">
+				<h1 class="shopcart-title">购物车</h1>
+				<span class="shopcart-empty">清空</span>
+			</div>
+			<div class="list-content">
+				<ul>
+					<li v-for="food in selectFood">
+						<span class="shopcart-name">{{food.name}}</span>
+						<div class="shopcart-price">
+							<span>{{food.price * food.count}}</span>
+						</div>
+						<div class="cartcontrol-wrapper">
+							<cartcontrol :food="food"></cartcontrol>
+						</div>
+					</li>
+				</ul>
+			</div>
+		</div>
 	</div>
 </template>
 <script>
+	import cartcontrol from '../components/cart-control.vue'
 	export default {
 		props:{
 			selectFood:{
@@ -53,6 +73,9 @@
 				default:0
 			}
 		},
+		components:{
+			cartcontrol
+		},
 		data(){
 			return {
 				balls:[{
@@ -66,7 +89,8 @@
 				},{
 					show:false
 				}],
-				dropBall:[]
+				dropBall:[],
+				fold:true
 			}
 		},
 		computed:{
@@ -90,6 +114,14 @@
 				}else{
 					return '去结算'
 				}
+			},
+			listShow(){
+				if(!this.selectFood.length){
+					this.fold = true;
+					return false;
+				}
+				let show = !this.fold;
+				return show;
 			}
 		},
 		methods: {
@@ -123,6 +155,13 @@
 			},
 			afterDrop(el){
 				console.log('afterDrop')
+			},
+			toggleList(){
+				console.log(this.selectFood.length);
+				if(!this.selectFood.length){
+					return ;
+				}
+				this.fold = !this.fold;
 			}
 		}
 	}
@@ -236,6 +275,63 @@
 		height:16px;
 		border-radius:50%;
 		color:red;
+	}
+	.shopcart-list{
+		position:absolute;
+		bottom:50px;
+		z-index:-1;
+		left:0;
+		width:100%;
+
+	}
+	.list-header{
+		height:40px;
+		line-height:40px;
+		padding:0 18px;
+		background:#F3F5F7;
+		border-bottom:2px solid rgba(7,17,27,0.2);
+	}
+	.shopcart-title{
+		float:left;
+		font-size:14px;
+		color:rgb(7,17,27);
+		margin:0
+	}
+	.shopcart-empty{
+		float:right;
+		font-size:12px;
+		color:rgb(0,160,220);
+		margin:0;
+
+	}
+	.list-content{
+		padding:0 12px 10px 12px;
+		max-height:147px;
+		overflow:auto;
+		background:#FFF;
+	}
+	.list-content li{
+		display:flex;
+		height:30px;
+		position: relative;
+	}
+	.shopcart-name{
+		line-height:30px;
+		font-size:14px;
+		color:rgb(7,17,27);
+	}
+	.shopcart-price{
+		position:absolute;
+		right:120px;
+		line-height:30px;
+		font-size:14px;
+		font-weight:700;
+		color:rgb(240,20,20);
+	}
+	.cartcontrol-wrapper{
+		position:absolute;
+		right: 20px;
+		margin-top: 4px;
 	}
 
 </style>
