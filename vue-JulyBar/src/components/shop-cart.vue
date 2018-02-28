@@ -1,59 +1,59 @@
 <template>
 	<div>
-			<div class="shopcart">
-		<div class="shop-content">
-			<div class="shop-left">
-				<div class="logo-wrapper">
-					<div class="logo" :class="{'highLight':totleCount != 0}" @click="toggleList"> 
-						<span>车</span>
+		<div class="shopcart">
+			<div class="shop-content">
+				<div class="shop-left">
+					<div class="logo-wrapper">
+						<div class="logo" :class="{'highLight':totleCount != 0}" @click="toggleList"> 
+							<span>车</span>
+						</div>
+						<div class="num" v-show="totleCount > 0">{{totleCount}}</div>
 					</div>
-					<div class="num" v-show="totleCount > 0">{{totleCount}}</div>
-				</div>
-				<div class="shop-price" :class="{'highPrice':totleCount != 0}">
-					¥{{totlePrice}}
-				</div>
-				<div class="shop-desc">
-					另需配送费¥{{deliveryPrice}}元
-				</div>
-			</div>
-			<div class="shop-right">
-				<div class="pay" :class="{'highPay':paySet === '去结算'}">
-					{{paySet}}
-				</div>
-			</div>
-		</div>
-		<div class="ball-container" v-if="false">
-			<div v-for="ball in balls" >
-				<transition name="drop" @before-enter="beforeDrop" @enter="dropping" @after-enter="afterDrop">
-					<div v-show="ball.show" class="ball">
-						<div class="ball-inner"></div>
+					<div class="shop-price" :class="{'highPrice':totleCount != 0}">
+						¥{{totlePrice}}
 					</div>
-				</transition>
+					<div class="shop-desc">
+						另需配送费¥{{deliveryPrice}}元
+					</div>
+				</div>
+				<div class="shop-right">
+					<div class="pay" :class="{'highPay':paySet === '去结算'}">
+						{{paySet}}
+					</div>
+				</div>
 			</div>
+			<div class="ball-container" v-if="false">
+				<div v-for="ball in balls" >
+					<transition name="drop" @before-enter="beforeDrop" @enter="dropping" @after-enter="afterDrop">
+						<div v-show="ball.show" class="ball">
+							<div class="ball-inner"></div>
+						</div>
+					</transition>
+				</div>
+			</div>
+			<transition name="shopcart">
+				<div class="shopcart-list" v-show="listShow">
+					<div class="list-header">
+						<h1 class="shopcart-title">购物车</h1>
+						<span class="shopcart-empty" @click="empty">清空</span>
+					</div>
+					<div class="list-content">
+						<ul>
+							<li v-for="food in selectFood">
+								<span class="shopcart-name">{{food.name}}</span>
+								<div class="shopcart-price">
+									<span>{{food.price * food.count}}</span>
+								</div>
+								<div class="cartcontrol-wrapper">
+									<cartcontrol :food="food"></cartcontrol>
+								</div>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</transition>
 		</div>
-		<transition name="shopcart">
-			<div class="shopcart-list" v-show="listShow">
-				<div class="list-header">
-					<h1 class="shopcart-title">购物车</h1>
-					<span class="shopcart-empty" @click="empty">清空</span>
-				</div>
-				<div class="list-content">
-					<ul>
-						<li v-for="food in selectFood">
-							<span class="shopcart-name">{{food.name}}</span>
-							<div class="shopcart-price">
-								<span>{{food.price * food.count}}</span>
-							</div>
-							<div class="cartcontrol-wrapper">
-								<cartcontrol :food="food"></cartcontrol>
-							</div>
-						</li>
-					</ul>
-				</div>
-			</div>
-		</transition>
-	</div>
-	<div class="list-master" v-show="listShow" @click="closeListShow()"></div>
+		<div class="list-master" v-show="listShow" @click="closeListShow()"></div>
 	</div>
 
 </template>

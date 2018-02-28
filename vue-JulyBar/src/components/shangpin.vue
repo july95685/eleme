@@ -10,7 +10,7 @@
 		</div>
 		<div class="goods-wrapper" ref="goodsWrapper">
 			<ul>
-				<li v-for="item in goods" class="goods-list food-list-hook" >
+				<li v-for="item in goods" class="goods-list food-list-hook" @click="chooseFood(item,$event)">
 					<h1 class="goods-title">{{item.name}}</h1>
 					<ul>
 						<li v-for="food in item.foods" class="food-item">
@@ -823,6 +823,9 @@
 			},
 			testcartAdd(target){
 				this.$refs.sc.drop(target); 
+			},
+			chooseFood(food,event){
+				console.log(food);
 			}
 		},
 			
