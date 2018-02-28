@@ -1,5 +1,6 @@
 <template>
 	<div class="goods">
+		<food :food="desFood" ref="decFood"></food>
 		<div class="menus-wrapper" ref="menusWrapper">
 			<ul>
 				<li v-for="(item,index) in goods" @click="selectMenu(index)"
@@ -10,10 +11,10 @@
 		</div>
 		<div class="goods-wrapper" ref="goodsWrapper">
 			<ul>
-				<li v-for="item in goods" class="goods-list food-list-hook" @click="chooseFood(item,$event)">
+				<li v-for="item in goods" class="goods-list food-list-hook">
 					<h1 class="goods-title">{{item.name}}</h1>
 					<ul>
-						<li v-for="food in item.foods" class="food-item">
+						<li v-for="food in item.foods" class="food-item" @click="chooseFood(food,$event)">
 							<div class="icon">
 								<img :width="54" :height="54" :src="food.icon">
 							</div>
@@ -46,6 +47,7 @@
 </template>
 <script>
 	import BScroll from 'better-scroll'
+	import food from '../components/food.vue'
 	import shopCart from '../components/shop-cart.vue'
 	import cartControl from '../components/cart-control.vue'
 	export default{
@@ -55,13 +57,14 @@
 			},
 		},
 		components:{
-			shopCart,cartControl
+			shopCart,cartControl,food
 		},
 		data(){
 			return {
 				 "listHeight":[],
 				 "scrollY":0,
 				 "inprice":20,
+				 "desFood":{},
 				 "goods": [
 					    {
 					      "name": "热销榜",
@@ -826,6 +829,8 @@
 			},
 			chooseFood(food,event){
 				console.log(food);
+				this.desFood = food;
+				this.$refs.decFood.show();
 			}
 		},
 			
