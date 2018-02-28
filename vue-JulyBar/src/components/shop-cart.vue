@@ -1,5 +1,6 @@
 <template>
-	<div class="shopcart">
+	<div>
+			<div class="shopcart">
 		<div class="shop-content">
 			<div class="shop-left">
 				<div class="logo-wrapper">
@@ -21,7 +22,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="ball-container">
+		<div class="ball-container" v-if="false">
 			<div v-for="ball in balls" >
 				<transition name="drop" @before-enter="beforeDrop" @enter="dropping" @after-enter="afterDrop">
 					<div v-show="ball.show" class="ball">
@@ -30,26 +31,31 @@
 				</transition>
 			</div>
 		</div>
-		<div class="shopcart-list" v-show="listShow">
-			<div class="list-header">
-				<h1 class="shopcart-title">购物车</h1>
-				<span class="shopcart-empty">清空</span>
+		<transition name="shopcart">
+			<div class="shopcart-list" v-show="listShow">
+				<div class="list-header">
+					<h1 class="shopcart-title">购物车</h1>
+					<span class="shopcart-empty" @click="empty">清空</span>
+				</div>
+				<div class="list-content">
+					<ul>
+						<li v-for="food in selectFood">
+							<span class="shopcart-name">{{food.name}}</span>
+							<div class="shopcart-price">
+								<span>{{food.price * food.count}}</span>
+							</div>
+							<div class="cartcontrol-wrapper">
+								<cartcontrol :food="food"></cartcontrol>
+							</div>
+						</li>
+					</ul>
+				</div>
 			</div>
-			<div class="list-content">
-				<ul>
-					<li v-for="food in selectFood">
-						<span class="shopcart-name">{{food.name}}</span>
-						<div class="shopcart-price">
-							<span>{{food.price * food.count}}</span>
-						</div>
-						<div class="cartcontrol-wrapper">
-							<cartcontrol :food="food"></cartcontrol>
-						</div>
-					</li>
-				</ul>
-			</div>
-		</div>
+		</transition>
 	</div>
+	<div class="list-master" v-show="listShow" @click="closeListShow()"></div>
+	</div>
+
 </template>
 <script>
 	import cartcontrol from '../components/cart-control.vue'
@@ -162,6 +168,15 @@
 					return ;
 				}
 				this.fold = !this.fold;
+			},
+			empty(){
+				this.selectFood.forEach(function(val,ind){
+					console.log(val);
+					val.count = 0;
+				})
+			},
+			closeListShow(){
+				this.fold = !this.fold
 			}
 		}
 	}
@@ -333,5 +348,28 @@
 		right: 20px;
 		margin-top: 4px;
 	}
+	.shopcart-enter-active, .shopcart-leave-active {
+	  transition: opacity .5s;
+	}
+	.shopcart-enter, .shopcart-leave-to{
+	  opacity: 0;
+	}
 
+	.shopcart-enter-active, .shopcart-leave-active {
+	  transition: all .3s ease;
+	}
+	.shopcart-enter, .shopcart-leave-to{
+	  transform: translateY(100px);
+	  opacity: 0;
+	}
+	.list-master{
+	    position: fixed;
+	    top: 0;
+	    left: 0;
+	    width: 100%;
+	    height: 100%;
+	    z-index: -2;
+	    background: rgba(7,17,27,0.6);
+	    filter:blur(10px);
+	}
 </style>
