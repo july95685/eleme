@@ -2,13 +2,13 @@
 	<div class="cartcontrol">
 		<transition name="cart-move">
 			<div style="display:inline-block" v-if="food.count > 0">
-					<div class="cart-decrease"  @click="decCart($event)">
+					<div class="cart-decrease"  @click.stop.prevent="decCart($event)">
 						-
 					</div>
 					<div class="cart-count" >{{food.count}}</div>
 			</div>
 		</transition>
-		<div class="cart-add" @click="addCart($event)">+</div>
+		<div class="cart-add" @click.stop.prevent="addCart($event)">+</div>
 	</div>
 </template>
 <script>
@@ -23,7 +23,6 @@
 		},
 		methods:{
 			addCart(ev){
-				ev.stopPropagation();
 				console.log('click');
 				if(!this.food.count){
 					Vue.set(this.food,'count',1);
@@ -33,7 +32,6 @@
 				this.$emit('cartaddevent',event.target);
 			},
 			decCart(ev){
-				ev.stopPropagation();
 				this.food.count = this.food.count - 1;
 			}
 		}

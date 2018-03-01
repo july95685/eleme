@@ -5,7 +5,7 @@
 				<img :src="food.image"></img>
 				<div class="close" @click="closeDialog()"> X </div>
 			</div>
-			<div class="content">
+			<div class="food-cnt">
 				<h1 class="food-title">{{food.name}}</h1>
 				<div class="food-detail">
 					<span class="sell-count">月售{{food.sellCount}}</span>
@@ -15,12 +15,28 @@
 					<span class="price">¥{{food.price}}</span>
 					<span v-show="food.oldPrice" class="price-old">原价:¥{{food.oldPrice}}</span>
 				</div>
+				<div class="cartControl-wrapper">
+					<cartControl :food = "food"></cartControl>
+				</div>
+				<div class="food-buy" v-show="!food.count || food.count == 0" @click="addFirstFood()">
+					加入购物车
+				</div>
 			</div>
 		</div>
+		<splite v-show="food.info"></splite>
+		<div class="food-info" v-show="food.info">
+			<div class="info-title">商品介绍</div>
+			<div class="info-content">{{food.info}}{{food.info}}</div>
+		</div>
+
+		<splite></splite>
 		
 	</div>
 </template>
 <script>
+	import cartControl from '../components/cart-control.vue'
+	import splite from '../components/splite.vue'
+	import Vue from 'vue'
 	export default{
 		props:{
 			food:{
@@ -39,7 +55,14 @@
 			},
 			closeDialog(){
 				this.foodFlag = false;
+			},
+			addFirstFood(event){
+				Vue.set(this.food,'count',1);
+
 			}
+		},
+		components:{
+			cartControl,splite
 		}
 	}
 </script>
@@ -52,6 +75,7 @@
 		z-index:30;
 		width:100%;
 		background:#FFF;
+		overflow-y:scroll;
 	}
 	.image-header{
 		position:relative;
@@ -73,5 +97,66 @@
 	    color: #FFF;
 	    font-weight: 700;
 	    left: 15px;
+	}
+	.food-cnt{
+		position:relative;
+		padding: 10px;
+	    width: 100%;
+	    margin: 0;
+	    text-align:left;
+	}
+	.food-title{
+		line-height:16px;
+		margin-bottom:8px;
+		font-weight:700;
+		font-size:16px;
+		color:rgb(7,17,27);
+	}
+	.food-detail{
+		margin-bottom:8px;
+		line-height:15px;
+		font-size:0
+	}
+	.food-detail .sell-count{
+		font-size:15px;
+		color:rgb(147,153,159);
+	}
+	.food-detail .rating{
+		margin-left:14px;
+		font-size:14px;
+		color:rgb(147,153,159);
+	}
+	.cartControl-wrapper{
+		position: absolute;
+	    right: 52px;
+	    bottom: 20px;
+	}
+	.food-buy{
+		position: absolute;
+	    right: 52px;
+	    bottom: 20px;
+	    z-index:30;
+	    height:24px;
+	    line-height:24px;
+	    font-size:15px;
+	    padding:0 12px;
+	    border-radius:12px;
+	    color:#FFF;
+	    background:rgb(0,160,220);	
+	}
+	.food-info{
+
+	}
+	.info-title{
+	    text-align: left;
+	    font-size: 18px;
+	    color: rgb(7,17,27);
+	    font-weight: 700;
+	    padding: 5px 0 0 10px;
+	}
+	.info-content{
+		text-align: left;
+	    font-size: 13px;
+	    padding: 5px 0 0 10px;
 	}
 </style>

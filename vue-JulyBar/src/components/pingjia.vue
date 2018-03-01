@@ -1,14 +1,18 @@
 <template>
-	<div class="star">2
-
+	<div class="star">
+		<ratingSelect></ratingSelect>
 	</div>
 </template>
 <script>
+	import ratingSelect from '../components/rating-select.vue'
 	export default{
 		props:{
 			size:{
 				type:Number
 			},
+		},
+		components:{
+			ratingSelect
 		}
 	}
 </script>
