@@ -78,4 +78,19 @@
 	.star-24 .off{
 		background-image:url("../resource/img/star24_off@2x.png");
 	}
+	.star-36 .star-item{
+		width:15px;
+		height:15px;
+		margin-right:10px;
+		background-size:15px 15px;
+	}
+	.star-36 .on{
+		background-image:url("../resource/img/star36_on@2x.png");
+	}
+	.star-36 .half{
+		background-image:url("../resource/img/star36_half@2x.png");
+	}
+	.star-36 .off{
+		background-image:url("../resource/img/star36_off@2x.png");
+	}
 </style>

@@ -30,10 +30,14 @@
 		</div>
 
 		<splite></splite>
-		
+		<div>
+			<div class="info-title">商品评价</div>
+			<ratingSelect :select-type="selectType" :ratings="food.ratings" :only-content="onlyContent" :desc="desc" @change-selecttype = "changeSelectType"></ratingSelect>
+		</div>
 	</div>
 </template>
 <script>
+	import ratingSelect from '../components/rating-select.vue'
 	import cartControl from '../components/cart-control.vue'
 	import splite from '../components/splite.vue'
 	import Vue from 'vue'
@@ -45,13 +49,21 @@
 		},
 		data(){
 			return{
-				foodFlag:false
+				foodFlag:false,
+				selectType:2,
+				onlyContent:true,
+				desc:{
+					all:"全部",
+					positive:"推荐",
+					negative:"吐槽"
+				}
 			}
 		},
 		methods:{
 			show(){
-				console.log(this.food);
 				this.foodFlag = true;
+				this.this = 2;
+				this.onlyContent = true;
 			},
 			closeDialog(){
 				this.foodFlag = false;
@@ -59,10 +71,14 @@
 			addFirstFood(event){
 				Vue.set(this.food,'count',1);
 
+			},
+			changeSelectType(type){
+				this.selectType = type;
 			}
 		},
+	
 		components:{
-			cartControl,splite
+			cartControl,splite,ratingSelect
 		}
 	}
 </script>
@@ -152,11 +168,14 @@
 	    font-size: 18px;
 	    color: rgb(7,17,27);
 	    font-weight: 700;
-	    padding: 5px 0 0 10px;
+	    padding: 5px 0 0 15px;
 	}
 	.info-content{
 		text-align: left;
 	    font-size: 13px;
-	    padding: 5px 0 0 10px;
+	    padding: 5px 15px 0 15px;
+	}
+	.rat-header{
+		display:flex;
 	}
 </style>
