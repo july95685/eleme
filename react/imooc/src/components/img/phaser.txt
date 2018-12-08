@@ -1,0 +1,54 @@
+phaser
+创建div 用作存放画布的容器
+
+new Phaser.Game(width,height,renderer,parent,state,transparent,antialias,physicConfig)
+宽度，高度，渲染方式（Phaser.CANVAS)，游戏的容器，游戏默认场景，画布元素是否透明，是否开启抗锯齿，物理引擎配置
+var game = new Phaser.Game(…)
+game.paused = true/false // 暂停，继续
+
+State 场景，一个phrase由多个state组成
+Pharse.state 有两种形式
+
+￼
+preload,create,update,render至少存在一个
+create 创建游戏显示对象或注册事件
+update 在游戏的每一帧都会调用（60）
+render 在游戏的每一个渲染周期都会调用，每一帧都是一个渲染周期，添加自定义渲染工作
+
+game.state 可以引用当前游戏的Phaser.stateManager对象
+game.state.add(name,state) //添加场景
+game.state.start(name) // 运行
+
+Phrase.loader对象 加载资源
+image(name,url地址)
+spritesheet 多张图片组合图片，小图片尺寸必须相同
+altas 加载雪碧图
+audio 加载音频资源
+
+var game = new Phaser.Game() // 创建游戏
+// game.load.onFileComplete 返回一个Phaser.signal事件，可以在它上面注册事件
+onFIleComplete.add(function(){ //单个资源加载完成
+	var progress = game.load.progress // 1表示1%
+})
+onLoadComplete.add(…) // 所有
+
+
+舞台
+var game = new Phaser.Game()
+game.stage.setBackgroundColor(16进制) // 设置舞台颜色
+
+game.world.setBounds(x,y,w,h) //设定世界边界大小
+
+game.camera.x = 100
+game.camera.y = 100 改变摄像机位置
+gane.camera.focusOn(displayObject) // 让摄像机定位到displayObject物体上
+gane.camera.focusOnXY(x,y) // 定位到x,y轴上位置
+gane.camera.follow(target) //跟随目标 
+
+game.scale.pageAlignHorizontally = true // 水平居中
+game.scale.pageAlignVertically = true // 垂直居中
+缩放模式
+EXACT_FIT 缩放到父元素的大小
+SHOW_ALL 保持长款比例缩放到最大可用
+USER_SCALE 自定义缩放
+
