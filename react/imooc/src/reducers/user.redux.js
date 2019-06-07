@@ -88,6 +88,7 @@ function errorMsg(msg) {
         type: ERROR_MSG
     }
 }
+
 function loadData(data) {
     console.log('123131')
     return {
@@ -95,6 +96,7 @@ function loadData(data) {
         type: LOAD_DATA
     }
 }
+
 export function register({user,pwd,replace,type}){
     if(!user || !pwd || !type){
         return errorMsg('用户名不能为空')
@@ -112,7 +114,7 @@ export function register({user,pwd,replace,type}){
                     dispatch(registerSuccess({user,pwd,type}))
                 } else {
                     // return dispatch(errorMsg(res.data.msg))
-                    //return dispatch => {
+                    // return dispatch => {
                         dispatch(errorMsg(res.data.msg))
                     // }   
                 }

@@ -70,7 +70,7 @@ class App extends Component {
 
 const mapStatetoProps = (state) => {
   return {
-    initData:state.initData,
+    initData: state.initData,
     showLayer: state.showLayer
   }
 }
